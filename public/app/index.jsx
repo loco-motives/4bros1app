@@ -169,14 +169,11 @@ class App extends React.Component {
   restartMovieLinks() {
     console.log('before setState, linksAnswers is: ', this.state.linksAnswers);
     let randomMovie = this.state.movieLinksStarters[Math.floor(Math.random() * 4)];
-    this.state.movieLinksStarted = false;
-    this.state.timerTime = 0;
-    this.state.linksAnswers = [];
 
     this.setState({
       movieLinksStarted: true,
       showTimer: true,
-      movieLinksUsedMovies: [],
+      movieLinksUsedMovies: [randomMovie],
       currentChallengeMovie: randomMovie,
       linksAnswers: [randomMovie],
       movieLinksEndMsg: '',
@@ -191,21 +188,24 @@ class App extends React.Component {
         movieLinksEndMsg: "time's up!",
         movieLinksStarted: false,
         showtimer: false,
-        timerTime: 0
+        timerTime: 0,
+        linksAnswers: []
       });
     } else if (type ==='wrong') {
       this.setState({
         movieLinksEndMsg: "invalid movie / link!",
         movieLinksStarted: false,
         showTimer: false,
-        timerTime: 0
+        timerTime: 0,
+        linksAnswers: []
       });
     } else if (type ==='repeated') {
       this.setState({
         movieLinksEndMsg: "repeated movie!",
         movieLinksStarted: false,
         showTimer: false,
-        timerTime: 0
+        timerTime: 0,
+        linksAnswers: []
       });
     }
   }
@@ -559,12 +559,12 @@ class App extends React.Component {
       .get('/api/getFirstFive')
       .then(result => {
         context.setState({movies: result.data})
-        console.log('movie data set to', context.state.movies)
+        // console.log('movie data set to', context.state.movies)
         axios
           .get('/api/getStaffRecs')
           .then(result => {
             context.setState({staffMovies: result.data, showSpinner: false})
-            console.log('movie data set to', context.state.staffMovies)
+            // console.log('movie data set to', context.state.staffMovies)
           })
           .catch(err => {
             console.log('error in component did mount in index', err)
