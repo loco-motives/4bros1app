@@ -21,6 +21,7 @@ import SearchMovieList from './searchMovieList.jsx'
 import MovieDescription from './movieDescription.jsx'
 import Screening from './screening.jsx'
 import CountdownTimer from './timer.jsx'
+import MovieLinksAnswers from './movielinksanswers.jsx'
 import {Modal} from 'react-bootstrap'
 import {DropdownButton} from 'react-bootstrap'
 import {Button} from 'react-bootstrap'
@@ -179,6 +180,7 @@ class App extends React.Component {
       movieLinksEndMsg: '',
       timerTime: 30
     });
+    this.forceUpdate()
   }
 
   movieLinksEnd(type) {
@@ -208,6 +210,8 @@ class App extends React.Component {
         linksAnswers: []
       });
     }
+
+    this.forceUpdate()
   }
 
   openSearch() {
@@ -236,6 +240,7 @@ class App extends React.Component {
     this.setState({showGameQuizModal: false})
   }
   closeMovieLinks() {
+    console.log('closed movielinks');
     this.setState({
       showMovieLinksModal: false,
       linksAnswers: [],
@@ -773,16 +778,10 @@ class App extends React.Component {
                           this.state.showTimer && 
                           <CountdownTimer secondsRemaining={this.state.timerTime} timerDone={this.movieLinksEnd}/>
                         }
-                          {this.state.movieLinksStarted && this
-                            .state
-                            .linksAnswers
-                            .map(answer => {
-                              return <div className='chatMessage'>
-                                <div>
-                                  The next movie is {answer.movie}, with link {answer.link}
-                                </div>
-                              </div>
-                            })}
+                          {this.state.movieLinksStarted ? <MovieLinksAnswers answers={this.state.linksAnswers}/>
+                        :<div></div>}
+                            
+                            
                           <form onSubmit={this.handleAnswerSubmit}>
                             <label>
                               Pick a related movie!
