@@ -74,7 +74,7 @@ class App extends React.Component {
       showSearchResults: false,
       detailMovie: null,
       showSpinner: true,
-      linksAnswers: [{movie: 'Eternal Sunshine of the Spotless Mind', link: 'Mark Ruffalo', user: 'Admin'}],
+      linksAnswers: [],
       movieLinksStarters: [
         {movie: 'The Avengers', link: 'Chris Evans', user: 'Admin'},
         {movie: 'The Expendables', link: 'Sylvester Stallone', user: 'Admin'},
@@ -82,7 +82,7 @@ class App extends React.Component {
         {movie: 'The Grand Budapest Hotel', link: 'Ralph Fiennes', user: 'Admin'},
         {movie: "Ocean's Elevent", link: 'George Clooney', user: 'Admin'}
       ],
-      currentChallengeMovie: {movie: 'Eternal Sunshine of the Spotless Mind', link: 'Mark Ruffalo', user: 'Admin'},
+      currentChallengeMovie: {},
       movieLinksUsedMovies: ['eternal sunshine of the spotless mind'],
       showTimer: false,
       movieLinksStarted: false,
@@ -118,30 +118,33 @@ class App extends React.Component {
   }
 
   handleAnswerSubmit(ev) {
+    console.log('used movies is: ', this.state.movieLinksUsedMovies);
     ev.preventDefault();
     this.setState({showTimer: false});
+    if(this.state.movieLinksUsedMovies.includes(document.getElementById('movieAnswer').value.toLowerCase())){
+      this.movieLinksEnd('repeated');
+    } else {
+      let answerObj = {} 
+      answerObj.userMovie = document.getElementById('movieAnswer').value.toLowerCase();
+      answerObj.link = document.getElementById('linkAnswer').value.toLowerCase();
+      answerObj.user = this.currentUser;
+      answerObj.usedMovies = this.state.movieLinksUsedMovies;
+      answerObj.currentMovie = this.state.currentChallengeMovie;
+      this.state.movieLinksUsedMovies.push(document.getElementById('movieAnswer').value.toLowerCase());
+      console.log('user submitted: ', answerObj);
+      socket.emit('answerSubmit', answerObj);
+      document
+        .getElementById('movieAnswer')
+        .value = '';
+      document
+        .getElementById('linkAnswer')
+        .value = '';
+    }
 
-    let answerObj = {} 
-    answerObj.userMovie = document.getElementById('movieAnswer').value.toLowerCase();
-    answerObj.link = document.getElementById('linkAnswer').value.toLowerCase();
-    answerObj.user = this.currentUser;
-    answerObj.usedMovies = this.state.movieLinksUsedMovies;
-    answerObj.currentMovie = this.state.currentChallengeMovie;
-    this.state.movieLinksUsedMovies.push(answerObj.userMovie = document.getElementById('movieAnswer').value.toLowerCase());
-    console.log('current user is: ', this.currentUser);
-    console.log('answerObj is ', answerObj);
-    console.log('usedMovies is', this.movieLinksUsedMovies);
-    console.log('currentMovie is ', this.state.currentChallengeMovie);
-    socket.emit('answerSubmit', answerObj);
-    document
-      .getElementById('movieAnswer')
-      .value = '';
-    document
-      .getElementById('linkAnswer')
-      .value = '';
   }
 
   handleNewAnswer() {
+    console.log('server sent a new movie');
     let answers = this.state.linksAnswers;
     let usedMovies = this.state.movieLinksUsedMovies;
     socket.on('sendBackAnswer', responseObj => {
@@ -149,10 +152,7 @@ class App extends React.Component {
         this.state.currentChallengeMovie = responseObj.movie;
         usedMovies.push(responseObj.movie);
         responseObj.user = 'Admin';
-        console.log('handleNewAnswer listener: ', responseObj);
         answers.push(responseObj);
-        console.log('answers:', answers);
-        console.log('responseObj is now: ', responseObj);
         this.setState({
           showTimer: true,
           timerTime: 30,
@@ -163,13 +163,15 @@ class App extends React.Component {
       } else {
         this.movieLinksEnd('wrong');
       }
-      console.log('this.state.linksAnswers: ', this.state.linksAnswers);
     });
   }
 
   restartMovieLinks() {
-    console.log('timerTime is now: ', this.state.timerTime);
+    console.log('before setState, linksAnswers is: ', this.state.linksAnswers);
     let randomMovie = this.state.movieLinksStarters[Math.floor(Math.random() * 4)];
+    this.state.movieLinksStarted = false;
+    this.state.timerTime = 0;
+    this.state.linksAnswers = [];
 
     this.setState({
       movieLinksStarted: true,
@@ -183,17 +185,27 @@ class App extends React.Component {
   }
 
   movieLinksEnd(type) {
+    console.log('movie links end');
     if(type === 'timeout') {
       this.setState({
         movieLinksEndMsg: "time's up!",
         movieLinksStarted: false,
-        showtimer: false
+        showtimer: false,
+        timerTime: 0
       });
-    } else {
+    } else if (type ==='wrong') {
       this.setState({
         movieLinksEndMsg: "invalid movie / link!",
         movieLinksStarted: false,
-        showTimer: false
+        showTimer: false,
+        timerTime: 0
+      });
+    } else if (type ==='repeated') {
+      this.setState({
+        movieLinksEndMsg: "repeated movie!",
+        movieLinksStarted: false,
+        showTimer: false,
+        timerTime: 0
       });
     }
   }
@@ -203,7 +215,6 @@ class App extends React.Component {
   }
 
   closeSearch() {
-    console.log('clsoing seearch box')
     this.setState({showSearchModal: false})
   }
 
@@ -279,7 +290,6 @@ class App extends React.Component {
     } else if (provider === "Don't like animals") {
       provider = 'search all'
     }
-    console.log('the genre you selected is', genre, era, provider)
     // default to return everything
     var test = function () {
       return true
@@ -323,8 +333,6 @@ class App extends React.Component {
       }
     })
       .then(resp => {
-        console.log('quiz submitted, movies that matched "' + genre + '" are :' + resp.data.map((movie) => movie.title))
-        console.log('you want to see', provider)
         if (provider === 'search all') {
           for (var i = 0; i < resp.data.length; i++) {
             if (test(resp.data[i].year)) {
