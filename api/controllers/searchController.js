@@ -78,7 +78,7 @@ searchController.checkMovieLinkAnswer = (currentMovie, usedMovies, link, userMov
         uri: 'http://api-public.guidebox.com/v2/search?type=person&query=' + query,
         headers: {
           'User-Agent': 'Request-Promise',
-          'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+          'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
         },
         json: true // Automatically parses the JSON string in the response
       }
@@ -142,7 +142,7 @@ searchController.byMovieTitle = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/search?type=movie&field=title&query=' + query,
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
@@ -220,7 +220,7 @@ searchController.byShowTitle = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/search?type=show&field=title&query=' + query,
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
@@ -331,7 +331,7 @@ searchController.byRelated = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/movies/' + resp[0].guideboxId + '/related',
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
@@ -347,7 +347,7 @@ searchController.byRelated = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/search?type=movie&field=title&query=' + query,
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
@@ -361,7 +361,7 @@ searchController.byRelated = (req, res) => {
                   uri: 'http://api-public.guidebox.com/v2/movies/' + resp.guideboxId + '/related',
                   headers: {
                     'User-Agent': 'Request-Promise',
-                    'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+                    'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
                   },
                   json: true // Automatically parses the JSON string in the response
                 }
@@ -406,7 +406,7 @@ searchController.byActor = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/search?type=person&query=' + query,
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
@@ -452,7 +452,7 @@ searchController.byDirector = (req, res) => {
           uri: 'http://api-public.guidebox.com/v2/search?type=person&query=' + query,
           headers: {
             'User-Agent': 'Request-Promise',
-            'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+            'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
           },
           json: true // Automatically parses the JSON string in the response
         }
