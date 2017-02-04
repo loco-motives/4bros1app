@@ -67,7 +67,7 @@ router
 
 router
     .route('/saveMovieToUser')
-    .get(saveMovieToUser)
+    .post(saveMovieToUser)
 
 router
     .route('/savedMovies')

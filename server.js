@@ -54,20 +54,26 @@ io.on('connection', socket => {
   });
 
   socket.on('answerSubmit', answerObj => {
-    console.log('message received: ', answerObj);
     checkMovieLinkAnswer(answerObj.currentMovie, answerObj.usedMovies, answerObj.link, answerObj.userMovie)
     .then(res => {
       let responseObj = {};
       responseObj.movie = res;
       responseObj.link = answerObj.link;
-      console.log('responseObj in server: ', responseObj);
       socket.emit('sendBackAnswer', responseObj);
     });
   });
+
+  socket.on('sendMsgToServer', msg => {
+    socket.broadcast.emit('sendMsgBackToClient', msg)
+  })
+
+  socket.on('sendToServerWhichUserIsTyping', user => {
+    socket.broadcast.emit('sendToClientWhichUserIsTyping', user)
+  })
 });
 
 //start the server
-http.listen(port, () => {
+http.listen(process.env.PORT || port, () => {
   console.log('listening on port ' + port)
 })
 

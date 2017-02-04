@@ -9,6 +9,7 @@ class movieEntry extends React.Component {
 		this.state = {
 		}
 	}
+
 	render() {
 		var movie = this.props.movie
 	  return (

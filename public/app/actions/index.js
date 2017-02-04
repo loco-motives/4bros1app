@@ -10,6 +10,7 @@ import {
 const ROOT_URL = 'http://localhost:3000';
 
 export function signinUser({ email, password }) {
+  console.log('currUser', email.substr(0, email.indexOf('@')))
   localStorage.setItem('currUser', email.substr(0, email.indexOf('@')))
   return function(dispatch) {
     // Submit email/password to the server

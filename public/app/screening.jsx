@@ -4,7 +4,7 @@ class Screening extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      messages: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.']
+      messages: []
     }
 
     this.addMessage = this.addMessage.bind(this)
@@ -17,6 +17,7 @@ class Screening extends React.Component {
       user: localStorage.currUser
     }
     socket.emit('sendMsgToServer', msgObj)
+    socket.emit('sendToServerWhichUserIsTyping', null)
     this.setState({messages: this.state.messages.concat(msgObj)})
     document.getElementById('chat-input').value = ''
   }
@@ -31,30 +32,48 @@ class Screening extends React.Component {
     });
   }
 
+  handleInProgressTyping() {
+    socket.on('sendToClientWhichUserIsTyping', user => {
+      console.log('user is typing', user)
+      if(user) {
+        document.getElementById('user-typing').innerText = user + ' is typing...'
+      } else {
+        document.getElementById('user-typing').innerHTML = '&nbsp;'
+      }
+    })
+  }
+
+  userTyping() {
+    if(document.getElementById('chat-input').value.length) {
+      socket.emit('sendToServerWhichUserIsTyping', localStorage.currUser)
+    } else {
+      socket.emit('sendToServerWhichUserIsTyping', null)
+    }
+  }
+
   componentDidMount() {
     this.socket = io('/')
-    this.handleNewMsg();
+    this.handleNewMsg()
+    this.handleInProgressTyping()
+    console.log('this.state.messages', this.state.messages)
   }
 
   render() {
     return (
       <div className="container chat-box-container">
         <div className="row chat-row">
-          <iframe className="screening-vid" width="682" height="600" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+          <iframe width="682" height="600" src="https://www.youtube.com/embed/live_stream?channel=UCOvUtFmjqalJXWRqpmm7zGg" frameborder="0" allowfullscreen></iframe>
           <div className="col-md-5 chat-box">
             <div className="panel panel-primary chat-box-panel">
               <div className="panel-heading">
                 <span className="glyphicon glyphicon-comment"></span>
-                Talk about the movie
+                <span className="chat-box-heading">Talk about Dog Day Afternoon</span>
               </div>
-              <div className="panel-body chat-box-panel-body">
+              <div className="panel-body chat-box-panel-body" id="chat-box-body">
                 <ul className="chat">
                   {this.state.messages.map(message => (
                     <li className="left clearfix">
-                      <span className="chat-img pull-left">
-                        <img src="http://placehold.it/50/55C1E7/fff&text=U" className="img-circle"/>
-                      </span>
-                      <div className="chat-body clearfix">
+                      <div className="chat-body clearfix" id="chat-msg">
                         <div className="header">
                           <strong className="primary-font">{message.user}</strong>
                           <small className="pull-right text-muted">
@@ -70,9 +89,11 @@ class Screening extends React.Component {
                   ))}
                 </ul>
               </div>
-              <div className="panel-footer">
+              <div className="panel-footer" id="chat-box-footer">
+                <span id="user-typing">&nbsp;</span>
                 <div className="input-group">
                   <input
+                    onChange={this.userTyping}
                     id="chat-input"
                     type="text"
                     className="form-control input-sm"

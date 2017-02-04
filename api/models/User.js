@@ -24,7 +24,8 @@ let userSchema = new mongoose.Schema({
   	required: true
   },
   saved: {
-    type: [String]  
+    type: Array,
+    default: []  
   },
   queryInputs: {
       type: [String]

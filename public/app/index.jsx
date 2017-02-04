@@ -356,6 +356,7 @@ class App extends React.Component {
   openDetails(movie) {
     var context = this
     this.setState({showSearchResults: false, showDetails: true, showSearchResults: false, showQuizResults: false, detailMovie: movie})
+    this.saveForLater(movie)
     // axios.get('api/movies/') .then(result => {   context.setState({     movies:
     // result.data,   })   console.log('movie details data set to',
     // context.state.movies); }) .catch(err => {   console.log('error in component
@@ -364,11 +365,9 @@ class App extends React.Component {
 
   saveForLater(movie) {
     axios
-      .get('/api/saveMovieToUser', {
-      headers: {
-        // email: this email address,
+      .post('/api/saveMovieToUser', {
+        email: localStorage.currUser+'@gmail.com',
         movie: movie
-      }
     })
       .then(resp => {
         console.log('success in saving movie to database', resp)
@@ -860,12 +859,11 @@ class App extends React.Component {
                     </Modal.Header>
                     <Modal.Body>
                       <p>
-                        <label>A Clockwork Orange: Feb 2nd 6pm PST</label>
-                        <button onClick={this.enterScreening}>Enter Screening</button>
+                        <label>Dog Day Afternoon: Feb 4nd 1pm PST</label>
+                        <button className="live-btn btn" onClick={this.enterScreening}>Live Now!</button>
                       </p>
                       <p>
-                        <label>Something's Gotta Give: Feb 12nd 9pm PST</label>
-                        <button onClick={this.enterScreening}>Enter Screening</button>
+                        <label>Something's Gotta Give: Feb 12th 9pm PST</label>
                       </p>
                       <p>
                         <label>Pink Floyd's The Wall: Feb 14th 10pm PST</label>

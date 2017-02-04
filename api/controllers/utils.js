@@ -237,7 +237,7 @@ utils.addRelatedToDB = gbOptions => {
               uri: 'http://api-public.guidebox.com/v2/movies/' + mov.id,
               headers: {
                 'User-Agent': 'Request-Promise',
-                'Authorization': '53d39189c3ecb7ab6757b6bc311f4e5b76c8f792'
+                'Authorization': '89ac6323a98e94831ccedd1d51ca3d7ee5d75ce8'
               },
               json: true
             }
