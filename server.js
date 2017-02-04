@@ -26,22 +26,12 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname + '/public')))
 
-// app.get('*', function (request, response){
-//   response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-// })
-
-
-
-
-// app.use('/node_modules', express.static(__dirname + "/node_modules"));
-
 app.use(cors());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use('/api', routes)
 
 app.get('*', function (request, response){
-  //response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
   response.redirect('/');
 })
 
