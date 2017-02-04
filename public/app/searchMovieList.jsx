@@ -21,7 +21,7 @@ class SearchMovieList extends React.Component {
 	let movies = this.props.movies.slice(0)
 	let front = this.state.front
 	let frontId = front //.id
-	console.log('movies at render is', movies)
+	// console.log('movies at render is', movies)
 	return(
 		<div>
 			<Jumbotron className = "searchResults">
